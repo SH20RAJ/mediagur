@@ -8,6 +8,7 @@ require('dotenv').config();
 const app = express();
 const port = 3000;
 
+console.log("Starting express");
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
@@ -36,12 +37,31 @@ async function uploadFile(filename, fileContent) {
   try {
     const encodedContent = Buffer.from(fileContent).toString('base64');
 
+    // Check if file already exists
+    const existingFileResponse = await axios.get(
+      `https://api.github.com/repos/${orgName}/${repo}/contents/${filename}`,
+      {
+        headers: {
+          Authorization: `token ${authToken}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/vnd.github.v3+json',
+        },
+      }
+    );
+
+    let sha = null;
+    if (existingFileResponse.data.sha) {
+      sha = existingFileResponse.data.sha;
+    }
+
+    // Create or update file
     const response = await axios.put(
       `https://api.github.com/repos/${orgName}/${repo}/contents/${filename}`,
       {
         message: 'Upload new file',
         content: encodedContent,
         branch: 'main',
+        sha: sha, // Provide sha for updating existing file
       },
       {
         headers: {
@@ -51,6 +71,8 @@ async function uploadFile(filename, fileContent) {
         },
       }
     );
+
+    console.log(response);
 
     const jsDelivrUrl = `https://cdn.jsdelivr.net/gh/${orgName}/${repo}@${response.data.commit.sha}/${filename}`;
     return { url: response.data.content.html_url, jsdelivr: jsDelivrUrl };
@@ -67,7 +89,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // Read file content
     const fileContent = fs.readFileSync(req.file.path);
+
+    // Log file content for debugging
+    console.log('File Content:', fileContent);
+
     const uploadedFile = await uploadFile(req.file.originalname, fileContent);
 
     // Delete the file from server after upload

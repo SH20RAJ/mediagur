@@ -22,10 +22,10 @@
     }
   </style>
 </head>
-<body class="bg-gray-100 py-12">
-  <div class="max-w-3xl mx-auto px-4">
+<body class="bg-gray-100 py-12 overflow-auto">
+  <div class="max-w-3xl mx-auto px-4 ">
     <h1 class="text-4xl font-bold text-center">mediagur - Host Unlimited Files</h1>
-    <div class="mt-8 p-8 bg-white rounded-lg shadow-lg">
+    <div class="mt-8 p-8 bg-white rounded-lg shadow-lg overflow-auto">
       <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" name="file" id="fileInput" class="mb-4">
         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Upload File</button>
@@ -39,6 +39,94 @@
       
       <p class="text-sm text-gray-500 mt-8">Your file will be hosted on: <a href="https://mediagur.vercel.app" class="underline">mediagur.vercel.app</a></p>
       <p class="text-sm text-gray-500">Check out the API documentation <a href="https://mediagur.vercel.app/docs" class="underline">here</a></p>
+    </div>
+
+    <div class="mt-8 p-8 bg-white rounded-lg shadow-lg overflow-auto">
+      <h3 id="mediagur-upload-file-and-get-url">mediagur : Upload File and Get URL</h3>
+<p>Free File Hosting with Uploading API. Upload a file to the mediagur platform and get the file URL.</p>
+<p><a href="https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FSH20RAJ%2Fmediagur"><img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FSH20RAJ%2Fmediagur&amp;countColor=%23263759&amp;style=flat" alt="Visitors"></a></p>
+<p><a href="https://www.jsdelivr.com/package/gh/mediagur/images"><img src="https://data.jsdelivr.com/v1/package/gh/mediagur/images/badge" alt=""></a></p>
+<p align="center">
+<img src="https://github.com/mediagur.png">
+</p>
+
+<ul>
+<li><strong>URL</strong>: <code>https://mediagur.vercel.app/upload</code></li>
+<li><strong>Method</strong>: <code>POST</code></li>
+<li><strong>Request Headers</strong>:<ul>
+<li><code>Content-Type: multipart/form-data</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="request-body">Request Body</h4>
+<ul>
+<li><strong>Form Data</strong>:<ul>
+<li><code>file</code>: The file to be uploaded. Supported file types: Any.</li>
+</ul>
+</li>
+</ul>
+<h4 id="response">Response</h4>
+<ul>
+<li><strong>Success Response</strong>:<ul>
+<li><strong>Code</strong>: <code>200 OK</code></li>
+<li><strong>Content</strong>:<pre><code class="lang-json">{
+  <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://mediagur.vercel.app/files/abcdefg/file.jpg"</span>,
+  <span class="hljs-attr">"jsdelivr"</span>: <span class="hljs-string">"https://cdn.jsdelivr.net/gh/mediagur/abcdefg/file.jpg"</span>
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li><strong>Error Responses</strong>:<ul>
+<li><strong>Code</strong>: <code>400 Bad Request</code><ul>
+<li><strong>Content</strong>: <code>{ &quot;error&quot;: &quot;No file uploaded&quot; }</code></li>
+</ul>
+</li>
+<li><strong>Code</strong>: <code>500 Internal Server Error</code><ul>
+<li><strong>Content</strong>: <code>{ &quot;error&quot;: &quot;File upload failed&quot; }</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="example">Example</h4>
+<ul>
+<li><p><strong>Request</strong>:</p>
+<pre><code class="lang-http">POST https://mediagur.vercel.app/upload
+Content-<span class="hljs-keyword">Type</span>: multipart/<span class="hljs-keyword">form</span>-<span class="hljs-keyword">data</span>
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: <span class="hljs-keyword">form</span>-<span class="hljs-keyword">data</span>; <span class="hljs-keyword">name</span>=<span class="hljs-string">"file"</span>; filename=<span class="hljs-string">"example.jpg"</span>
+Content-<span class="hljs-keyword">Type</span>: image/jpeg
+
+&lt;Binary <span class="hljs-keyword">data</span> of the <span class="hljs-keyword">file</span>&gt;
+----WebKitFormBoundary7MA4YWxkTrZu0gW--
+</code></pre>
+</li>
+<li><strong>Response</strong>:<pre><code class="lang-json">{
+  <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://mediagur.vercel.app/files/abcdefg/example.jpg"</span>,
+  <span class="hljs-attr">"jsdelivr"</span>: <span class="hljs-string">"https://cdn.jsdelivr.net/gh/mediagur/abcdefg/example.jpg"</span>
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="explanation">Explanation</h3>
+<ul>
+<li>This API endpoint allows clients to upload a file to the mediagur platform using a <code>POST</code> request with <code>multipart/form-data</code> content type.</li>
+<li>The uploaded file is stored on the mediagur platform indefinitely.</li>
+<li>After successful upload, the API responds with a JSON object containing the URL of the uploaded file on the mediagur platform and a jsDelivr CDN URL for easy access to the file.</li>
+<li>If no file is uploaded, the API returns a <code>400 Bad Request</code> error with an appropriate error message.</li>
+<li>If there is an internal server error during file upload, the API returns a <code>500 Internal Server Error</code> with an error message.</li>
+</ul>
+<h3 id="additional-notes">Additional Notes</h3>
+<ul>
+<li>Uploaded files are stored indefinitely.</li>
+<li>The jsDelivr CDN URLs provided can be used to access the uploaded files.</li>
+</ul>
+<h3 id="contact">Contact</h3>
+<p>For any questions or support, please contact us at <a href="mailto:support@mediagur.vercel.app">support@mediagur.vercel.app</a>.</p>
+<p>This simplified documentation focuses on the POST endpoint for uploading files and getting the file URL. You can expand this documentation with more endpoints, parameters, and detailed examples as needed.</p>
+
     </div>
   </div>
 
@@ -60,6 +148,7 @@
         }
 
         const data = await response.json();
+        fetch(data.file.jsdelivr);
         
         // Display the result
         document.getElementById('jsdelivrUrl').textContent = 'jsDelivr URL: ' + data.file.jsdelivr;

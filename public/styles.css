@@ -1,0 +1,25 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+h1 {
+  color: #333;
+}
+form {
+  margin-bottom: 20px;
+}
+#uploadResult {
+  display: none;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+#uploadResult h2 {
+  color: #333;
+  font-size: 20px;
+}
+#uploadResult p {
+  margin: 5px 0;
+}

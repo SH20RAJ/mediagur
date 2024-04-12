@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mediagur - Host Unlimited Files</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="https://github.com/mediagur.png" type="image/png">
+
+  <!-- Metadata -->
+  <meta name="description" content="Host unlimited files with mediagur. Simple drag and drop file hosting with free jsDelivr CDN.">
+  <meta name="keywords" content="mediagur, host files, file hosting, jsDelivr, CDN">
+  <meta name="author" content="Your Name">
+
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles */
+    .copy-button {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 py-12">
+  <div class="max-w-3xl mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center">mediagur - Host Unlimited Files</h1>
+    <div class="mt-8 p-8 bg-white rounded-lg shadow-lg">
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" class="mb-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Upload File</button>
+      </form>
+      
+      <div id="uploadResult" class="hidden mt-8">
+        <h2>Upload Result:</h2>
+        <p id="jsdelivrUrl" class="mt-2">jsDelivr URL: </p>
+        <button id="copyButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mt-2">Copy URL</button>
+      </div>
+      
+      <p class="text-sm text-gray-500 mt-8">Your file will be hosted on: <a href="https://mediagur.vercel.app" class="underline">mediagur.vercel.app</a></p>
+      <p class="text-sm text-gray-500">Check out the API documentation <a href="https://mediagur.vercel.app/docs" class="underline">here</a></p>
+    </div>
+  </div>
+
+  <!-- Include Tailwind CSS and basic JavaScript -->
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      
+      const formData = new FormData(document.getElementById('uploadForm'));
+      
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        
+        // Display the result
+        document.getElementById('jsdelivrUrl').textContent = 'jsDelivr URL: ' + data.file.jsdelivr;
+        document.getElementById('uploadResult').classList.remove('hidden');
+      } catch (error) {
+        console.error('Error uploading file:', error.message);
+      }
+    });
+
+    document.getElementById('copyButton').addEventListener('click', () => {
+      const jsdelivrUrl = document.getElementById('jsdelivrUrl').textContent.trim().replace('jsDelivr URL: ', '');
+      
+      const textArea = document.createElement('textarea');
+      textArea.value = jsdelivrUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('URL copied to clipboard');
+    });
+  </script>
+</body>
+</html>

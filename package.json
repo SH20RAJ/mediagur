@@ -1,0 +1,12 @@
+{
+  "name": "mediagur",
+  "version": "1.0.0",
+  "description": "Free File Hosting with Uploading API. Upload a file to the mediagur platform and get the file URL.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
